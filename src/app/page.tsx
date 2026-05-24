@@ -14,6 +14,8 @@ import { SearchForm } from "@/components/flight/search-form";
 
 import { Button } from "@/components/ui/button";
 
+import Link from "next/link";
+
 import {
   Card,
   CardContent,
@@ -72,9 +74,9 @@ export default function HomePage() {
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.15),transparent_40%)]" />
 
-        <div className="absolute left-0 top-0 h-[500px] w-[500px] rounded-full bg-blue-500/10 blur-3xl" />
+        <div className="absolute left-0 top-0 h-125 w-125 rounded-full bg-blue-500/10 blur-3xl" />
 
-        <div className="absolute bottom-0 right-0 h-[500px] w-[500px] rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute bottom-0 right-0 h-125 w-125 rounded-full bg-cyan-500/10 blur-3xl" />
 
         {/* HERO */}
 
@@ -212,11 +214,13 @@ export default function HomePage() {
                 ))}
               </div>
 
-              <Button className="mt-10 h-12 px-8 text-base">
-                Explore Flights
+              <Link href="/flights">
+                <Button className="mt-10 h-12 px-8 text-base">
+                  Explore Flights
 
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
             </div>
 
             <div className="relative">
@@ -300,9 +304,11 @@ export default function HomePage() {
                   technology with SkyLine.
                 </p>
 
-                <Button className="mt-10 h-12 px-10 text-base">
-                  Get Started Now
-                </Button>
+                <Link href="/signup">
+                  <Button className="mt-10 h-12 px-10 text-base">
+                    Get Started Now
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

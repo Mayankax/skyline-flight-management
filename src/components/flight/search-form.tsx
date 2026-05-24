@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import Link from "next/link";
+
 import { useRouter } from "next/navigation";
 
 import { format } from "date-fns";
@@ -62,13 +64,14 @@ export function SearchForm() {
   }
 
   return (
-    <div className="mt-10 grid w-full max-w-5xl gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl md:grid-cols-4">
+    <div className="relative z-20 mt-10 grid w-full max-w-5xl gap-4 rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-2xl md:grid-cols-4">
       <Input
         placeholder="Origin"
         value={origin}
         onChange={(e) =>
           setOrigin(e.target.value)
         }
+        className="h-12 border-white/10 bg-white/3 text-white placeholder:text-gray-500"
       />
 
       <Input
@@ -79,13 +82,14 @@ export function SearchForm() {
             e.target.value
           )
         }
+        className="h-12 border-white/10 bg-white/3 text-white placeholder:text-gray-500"
       />
 
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className="justify-start"
+            className="h-12 justify-start border-white/10 bg-white/3 text-left text-white hover:bg-white/10"
           >
             <CalendarIcon className="mr-2 h-4 w-4" />
 
@@ -98,7 +102,10 @@ export function SearchForm() {
           </Button>
         </PopoverTrigger>
 
-        <PopoverContent>
+        <PopoverContent
+          align="start"
+          className="z-100 w-auto border-white/10 bg-[#081120]/95 p-0 backdrop-blur-2xl"
+        >
           <Calendar
             mode="single"
             selected={date}
@@ -109,7 +116,7 @@ export function SearchForm() {
 
       <Button
         onClick={handleSearch}
-        className="h-10"
+        className="h-12 bg-linear-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/20"
       >
         <Search className="mr-2 h-4 w-4" />
 
