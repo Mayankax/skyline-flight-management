@@ -139,102 +139,38 @@ export async function cancelBooking(
 
 export async function rescheduleBooking(
   bookingId: string,
-  newFlightId: string
+  newFlightId: string,
+  newSeatId: string
 ) {
-  const supabase =
-    await createClient();
+  const supabase = await createClient();
 
-  const {
-    data: existingBooking,
-  } = await supabase
-    .from("bookings")
-    .select(`
-      *,
-      flights (*)
-    `)
-    .eq("id", bookingId)
-    .single();
+  const { data: userData } = await supabase.auth.getUser();
 
-  if (!existingBooking) {
+  if (!userData.user) {
     return {
-      error:
-        "Booking not found",
+      error: "Unauthorized access",
     };
   }
 
-  const {
-    data: newFlight,
-  } = await supabase
-    .from("flights")
-    .select("*")
-    .eq("id", newFlightId)
-    .single();
-
-  if (!newFlight) {
-    return {
-      error:
-        "Flight not found",
-    };
-  }
-
-  const fee =
-    Math.max(
-      0,
-      newFlight.base_price -
-        existingBooking
-          .flights.base_price
-    );
-
-  const {
-    error: rescheduleError,
-  } = await supabase
-    .from("reschedules")
-    .insert({
-      booking_id: bookingId,
-
-      old_flight_id:
-        existingBooking.flight_id,
-
-      new_flight_id:
-        newFlightId,
-
-      fee_charged: fee,
-    });
-
-  if (rescheduleError) {
-    return {
-      error:
-        rescheduleError.message,
-    };
-  }
-
-  const {
-    error: updateError,
-  } = await supabase
-    .from("bookings")
-    .update({
-      flight_id: newFlightId,
-
-      status: "rescheduled",
-
-      total_price:
-        existingBooking.total_price +
-        fee,
-    })
-    .eq("id", bookingId);
-
-  if (updateError) {
-    return {
-      error:
-        updateError.message,
-    };
-  }
-
-  revalidatePath(
-    "/my-bookings"
+  const { data: bookingIdResult, error } = await supabase.rpc(
+    "reschedule_booking",
+    {
+      p_booking_id: bookingId,
+      p_new_flight_id: newFlightId,
+      p_new_seat_id: newSeatId,
+    }
   );
+
+  if (error) {
+    return {
+      error: error.message,
+    };
+  }
+
+  revalidatePath("/my-bookings");
 
   return {
     success: true,
+    bookingId: bookingIdResult,
   };
 }

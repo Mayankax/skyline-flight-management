@@ -33,19 +33,16 @@ export default async function ReschedulePage({
     notFound();
   }
 
-  const { data: flights } =
-    await supabase
-      .from("flights")
-      .select("*")
-      .eq(
-        "origin",
-        booking.flights.origin
-      )
-      .eq(
-        "destination",
-        booking.flights
-          .destination
-      );
+  const { data: flights } = await supabase
+    .from("flights")
+    .select("*")
+    .eq("origin", booking.flights.origin)
+    .eq("destination", booking.flights.destination)
+    .neq("id", booking.flight_id)
+    .gt("departs_at", new Date().toISOString())
+    .order("departs_at", {
+      ascending: true,
+    });
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
